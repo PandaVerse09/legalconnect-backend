@@ -77,9 +77,11 @@ async function startServer() {
 	try {
 		await connectDB();
 
-		app.listen(PORT, () => {
-			console.log(`Running on port ${PORT}`);
+		//binding to 0.0.0.0 for production(For Nginx Reverse Proxy)
+		app.listen(PORT, "0.0.0.0", () => {
+  			console.log(`Running on port ${PORT}`);
 		});
+
 	} catch (error) {
 		console.error("Server failed to start:", error.message);
 		process.exit(1);
