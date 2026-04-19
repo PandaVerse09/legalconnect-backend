@@ -9,17 +9,23 @@ services:
     env_file:
       - .env
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     restart: always
 
   mongo:
-    image: mongo:6
-    container_name: mongo-db
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    restart: always
+  image: mongo:6
+  container_name: mongo-db
+  ports:
+    - "27017:27017"
+  volumes:
+    - mongo-data:/data/db
+  restart: always
+  healthcheck:
+    test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+    interval: 10s
+    timeout: 5s
+    retries: 5
 
 volumes:
   mongo-data:
